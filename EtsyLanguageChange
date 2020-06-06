@@ -1,0 +1,81 @@
+package test.com;
+
+import java.util.concurrent.TimeUnit;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import sun.font.EAttribute;
+
+/**
+ *
+ * @author Vitali
+ */
+public class EtsyChangeLanguage {
+    private WebDriver driver;
+    private String baseUrl;
+    
+    public EtsyChangeLanguage() {
+    }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver","C:\\Users\\Vitali\\Documents\\selenium dependencies\\drivers\\chromedriver.exe");
+        driver = new ChromeDriver();
+        baseUrl = "https://etsy.com";
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver.manage().window().maximize();
+        }
+    @After
+    public void tearDown() {
+        driver.close();
+    }
+
+    @Test
+    public void testLanguageChange() throws InterruptedException{
+    driver.get(baseUrl);
+    driver.findElement(By.xpath("//*[@id=\"gnav-header-inner\"]/div[4]/nav/ul/li[1]/button")).click();
+    driver.findElement(By.id("join_neu_email_field")).sendKeys("shah.tejas1295@gmail.com");
+    driver.findElement(By.id("join_neu_password_field")).sendKeys("Password123");
+    driver.findElement(By.xpath("//button[@name='submit_attempt']")).click();
+        String title1= "Etsy - Shop for handmade, vintage, custom, and unique gifts for everyone";
+        assertEquals(title1, driver.getTitle());
+    Thread.sleep(3000);
+    driver.findElement(By.xpath("//a[@aria-label='Your account']")).click();
+    Thread.sleep(2000);
+    driver.findElement(By.xpath("//ul[@role='menu']/li[5]")).click();
+        System.out.println(driver.getTitle());
+        String title2 = "Etsy - Account Settings";
+        assertEquals(title2, driver.getTitle());
+       
+        driver.findElement(By.xpath("//a[contains(text(), 'Preferences')]")).click();
+        driver.findElement(By.xpath("//div[@class='locale-selector languages']/ul/li[4]")).click();
+        
+        Thread.sleep(2000);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,950)", "");
+        
+        driver.findElement(By.xpath("//input[@value='Update Preferences']")).click();
+       // driver.navigate().back();
+        
+        
+        String titleInSpanish ="Etsy - Preferencias";
+        assertEquals(titleInSpanish, driver.getTitle());
+                
+        }
+}
